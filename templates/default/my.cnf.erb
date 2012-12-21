@@ -21,6 +21,25 @@
 # escpecially if they contain "#" chars...
 # Remember to edit /etc/mysql/debian.cnf when changing the socket location.
 [client]
+<%- if node['mysql']['tunable']['client'] %>
+<% node['mysql']['tunable']['client'].sort.each do |key, value| %>
+<% next if value.nil? -%>
+<%=
+  case value
+  when String
+"#{key} = '#{value}'"
+  when TrueClass
+'#{key}'
+  when FalseClass || "false"
+''
+  else
+"#{key} = '#{value}'"
+  end
+%>
+<% end %>
+<% end %>
+
+
 port            = <%= node['mysql']['port'] %>
 socket          = <%= node['mysql']['socket'] %>
 
@@ -33,6 +52,23 @@ socket          = <%= node['mysql']['socket'] %>
 nice            = <%= node['mysql']['nice'] %>
 
 [mysqld]
+<%- if node['mysql']['tunable']['client'] %>
+<% node['mysql']['tunable']['mysqld'].sort.each do |key, value| %>
+<% next if value.nil? -%>
+<%=
+  case value
+  when String
+"#{key} = '#{value}'"
+  when TrueClass
+'#{key}'
+  when FalseClass || "false"
+''
+  else
+"#{key} = '#{value}'"
+  end
+%>
+<% end %>
+<% end %>
 #
 # * Basic Settings
 #
